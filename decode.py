@@ -3,9 +3,12 @@ import sys
 from pathlib import Path
 
 strList = []
-for path in Path("千字文").glob("*.txt"):
-    with open(path) as f:
+for i in range(5):
+    with open(Path("千字文") / f"{i}.txt") as f:
         strList.append(re.sub(r"\s|，|。", "", f.read()))
+
+for i in strList:
+    print(len(set(i)))
 
 
 def decode(text: str) -> str:
