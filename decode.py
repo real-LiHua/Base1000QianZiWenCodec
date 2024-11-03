@@ -6,7 +6,6 @@ strList = []
 for path in Path("千字文").glob("*.txt"):
     with open(path) as f:
         strList.append(re.sub(r"\s|，|。", "", f.read()))
-    path.write_text(strList[-1])
 
 
 def decode(text: str) -> str:
