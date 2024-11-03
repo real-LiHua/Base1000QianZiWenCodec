@@ -7,9 +7,6 @@ for i in range(5):
     with open(Path("千字文") / f"{i}.txt") as f:
         strList.append(re.sub(r"\s|，|。", "", f.read()))
 
-for i in strList:
-    print(len(set(i)))
-
 
 def decode(text: str) -> str:
     c = []
