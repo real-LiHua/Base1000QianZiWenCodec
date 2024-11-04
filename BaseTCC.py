@@ -1,5 +1,5 @@
+import argparse
 import re
-import sys
 from itertools import product
 from pathlib import Path
 from random import randrange
@@ -7,35 +7,39 @@ from typing import Generator, List, Set
 
 # 存储每个文件的内容
 file_contents: List[str] = []
-# 遍历目录下的所有文本文件
-for file_path in Path("千字文").glob("*.txt"):
-    with open(file_path, encoding="utf-8") as file:
+
+# 遍历指定目录下的所有文本文件并读取内容
+for txt_file_path in Path("千字文").glob("*.txt"):
+    with open(txt_file_path, encoding="utf-8") as file:
         # 去除文本中的空格、逗号和句号
         cleaned_content = re.sub(r"\s|，|。", "", file.read())
-        file_contents.append(cleaned_content)
+        file_contents.append(cleaned_content)  # 添加清理后的内容
 
 
 def encode(input_text: str) -> str:
-    # 存储编码后的结果
-    encoded_result = []
-    # 文件内容的数量
-    file_count = len(file_contents)
+    """将输入文本编码为字符串"""
+    encoded_chars = []  # 存储编码后的结果
+    num_files = len(file_contents)  # 文件内容的数量
     # 将输入文本转换为字节并转为整数
-    numeric_representation = "00" + str(int.from_bytes(input_text.encode()))
-    while len(numeric_representation) > 2:
-        # 从随机文件中选择字符
-        encoded_result.append(
-            file_contents[randrange(file_count)][int(numeric_representation[-3:])]
-        )
-        numeric_representation = numeric_representation[:-3]
-    return "".join(encoded_result[::-1])  # 返回反转后的字符串
+    byte_representation = "00" + str(int.from_bytes(input_text.encode()))
+
+    while len(byte_representation) > 2:
+        # 从随机文件中选择字符并追加到结果中
+        encoded_char = file_contents[randrange(num_files)][
+            int(byte_representation[-3:])
+        ]
+        encoded_chars.append(encoded_char)
+        byte_representation = byte_representation[:-3]  # 逐步减少字节表示
+
+    return "".join(encoded_chars[::-1])  # 返回反转后的字符串
 
 
-def decode(encoded_str: str) -> Generator[str, None, None]:
-    # 存储字符对应的索引集合
-    index_sets: List[Set[int]] = []
+def decode(encoded_string: str) -> Generator[str, None, None]:
+    """将编码字符串解码为原始文本"""
+    index_sets: List[Set[int]] = []  # 存储字符对应的索引集合
+
     # 遍历编码字符串中的每个字符
-    for character in encoded_str:
+    for character in encoded_string:
         # 找到每个字符在所有文本中的位置
         indices = set(
             match.start()
@@ -56,5 +60,21 @@ def decode(encoded_str: str) -> Generator[str, None, None]:
             pass  # 解码错误则跳过
 
 
+def main():
+    """主程序入口"""
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-e", "--encode", action="store_true", help="编码输入文本")
+    group.add_argument("-d", "--decode", action="store_true", help="解码输入文本")
+    parser.add_argument("text", help="需要编码或解码的文本")
+    args = parser.parse_args()
+
+    # 根据命令行参数选择编码或解码
+    if args.encode:
+        print(encode(args.text))
+    else:
+        print(*decode(args.text), sep="\n")
+
+
 if __name__ == "__main__":
-    print(*decode(sys.argv[1]), sep="\n")
+    main()
