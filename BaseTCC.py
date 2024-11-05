@@ -1,37 +1,42 @@
 import argparse
 import re
 from itertools import product, zip_longest
+from json import dump, load
 from pathlib import Path
 from random import choice
-from typing import Generator, List, Set, Tuple
+from typing import Generator, List, Set
 
-# 存储每个文件的内容
-file_contents: List[str] = []
+CACHE_PATH = Path("千字文") / "cache.json"
 
-# 遍历指定目录下的所有文本文件并读取内容
-for txt_file_path in Path("千字文").glob("*.txt"):
-    with open(txt_file_path, encoding="utf-8") as file:
-        # 去除文本中的空格、逗号和句号
-        cleaned_content = re.sub(r"\s|，|。", "", file.read())
-        file_contents.append(cleaned_content)  # 添加清理后的内容
+# 如果缓存文件存在，则加载内容
+if CACHE_PATH.is_file():
+    character_tuples = load(open(CACHE_PATH))
+else:
+    # 存储每个文件的内容
+    file_contents: List[str] = []
 
-# 创建字符的元组列表，以便编码和解码
-str_tuples: Tuple[Tuple[str, ...]] = tuple(
-    map(tuple, map(set, zip_longest(*file_contents)))
-)
+    # 遍历指定目录下的所有文本文件并读取内容
+    for text_file_path in Path("千字文").glob("*.txt"):
+        with open(text_file_path, encoding="utf-8") as file:
+            # 去除文本中的空格、逗号和句号
+            cleaned_content = re.sub(r"\s|，|。", "", file.read())
+            file_contents.append(cleaned_content)  # 添加清理后的内容
+
+    # 创建字符的元组列表，以便编码和解码
+    character_tuples = list(map(list, map(set, zip_longest(*file_contents))))
+    CACHE_PATH.touch()
+    dump(character_tuples, open(CACHE_PATH, "w"), ensure_ascii=False)
 
 
 def encode(input_text: str) -> str:
     """将输入文本编码为字符串"""
     encoded_chars: List[str] = []  # 存储编码后的结果
-    # 文件内容的数量
-    num_files: int = len(file_contents)
     # 将输入文本转换为字节并转为整数
     byte_representation: str = "00" + str(int.from_bytes(input_text.encode(), "big"))
 
     while len(byte_representation) > 2:
         # 从随机文件中选择字符并追加到结果中
-        encoded_char: str = choice(str_tuples[int(byte_representation[-3:])])
+        encoded_char: str = choice(character_tuples[int(byte_representation[-3:])])
         encoded_chars.append(encoded_char)
         byte_representation = byte_representation[:-3]  # 逐步减少字节表示
 
@@ -45,7 +50,9 @@ def decode(encoded_string: str) -> Generator[str, None, None]:
     # 遍历编码字符串中的每个字符
     for character in encoded_string:
         # 找到每个字符在所有文本中的位置
-        indices: Set[int] = set(k for k, v in enumerate(str_tuples) if character in v)
+        indices: Set[int] = set(
+            idx for idx, chars in enumerate(character_tuples) if character in chars
+        )
         index_sets.append(indices)  # 将索引添加到集合中
 
     # 生成解码结果
