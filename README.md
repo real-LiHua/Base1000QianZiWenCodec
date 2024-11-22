@@ -1,2 +1,0 @@
-# BaseThousandCharacterClassic
-Base千字文
