@@ -90,5 +90,6 @@ Makefile
 *.exe
 *.out
 *.app
+base1000
 
 # End of https://www.toptal.com/developers/gitignore/api/autotools,c++
