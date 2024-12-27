@@ -1,3 +1,7 @@
+# 变量名 GPT 取的
+# 注释 GPT 写的
+# README.md 也是 GPT 写的
+# 咱只写逻辑
 import argparse
 import re
 from itertools import product, zip_longest
