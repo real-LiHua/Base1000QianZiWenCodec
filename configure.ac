@@ -1,8 +1,0 @@
-AC_PREREQ([2.72])
-AC_INIT([base1000], [0.0.1], [http://github.com/real-LiHua/base1000])
-AM_INIT_AUTOMAKE
-AC_CONFIG_HEADERS([config.h])
-AC_PROG_CXX
-AC_PROG_MAKE_SET
-AC_CONFIG_FILES([Makefile])
-AC_OUTPUT

@@ -10,7 +10,7 @@ from pathlib import Path
 from random import choice
 from typing import Generator, List, Set
 
-CACHE_PATH = Path("千字文") / "cache.json"
+CACHE_PATH = Path(__file__).parent / "千字文" / "cache.json"
 
 # 如果缓存文件存在，则加载内容
 if CACHE_PATH.is_file():
