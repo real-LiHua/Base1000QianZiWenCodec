@@ -1,7 +1,6 @@
 use num_bigint::{BigInt, Sign};
 use rand::prelude::*;
 use rust_embed::Embed;
-use std::collections::HashSet;
 use std::string::String;
 use std::sync::LazyLock;
 
@@ -11,7 +10,7 @@ use std::sync::LazyLock;
 struct Asset;
 
 static QZW: LazyLock<Vec<Vec<char>>> = LazyLock::new(|| {
-    let mut result = vec![HashSet::new(); 1000];
+    let mut result = vec![Vec::new(); 1000];
     for file in Asset::iter() {
         for (index, item) in std::str::from_utf8(&Asset::get(&file).unwrap().data)
             .unwrap()
@@ -19,13 +18,12 @@ static QZW: LazyLock<Vec<Vec<char>>> = LazyLock::new(|| {
             .filter(|c| !c.is_whitespace())
             .enumerate()
         {
-            result[index].insert(item);
+            if !result[index].contains(&item) {
+                result[index].push(item);
+            }
         }
     }
-    return result
-        .iter()
-        .map(|x| x.iter().cloned().collect())
-        .collect::<Vec<Vec<char>>>();
+    return result;
 });
 
 pub fn encode(text: String) -> String {
