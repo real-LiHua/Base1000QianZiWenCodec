@@ -1,6 +1,8 @@
+use itertools::Itertools;
 use num_bigint::{BigInt, Sign};
 use rand::prelude::*;
 use rust_embed::Embed;
+use std::collections::HashMap;
 use std::string::String;
 use std::sync::LazyLock;
 
@@ -9,8 +11,10 @@ use std::sync::LazyLock;
 #[include = "*.txt"]
 struct Asset;
 
-static QZW: LazyLock<Vec<Vec<char>>> = LazyLock::new(|| {
+static QZW: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = LazyLock::new(|| {
     let mut result = vec![Vec::new(); 1000];
+    let mut indexes: HashMap<char, Vec<String>> = HashMap::new();
+    let mut temp: String;
     for file in Asset::iter() {
         for (index, item) in std::str::from_utf8(&Asset::get(&file).unwrap().data)
             .unwrap()
@@ -21,9 +25,19 @@ static QZW: LazyLock<Vec<Vec<char>>> = LazyLock::new(|| {
             if !result[index].contains(&item) {
                 result[index].push(item);
             }
+            temp = format!("{:03}", index);
+            if !indexes.contains_key(&item) {
+                indexes.insert(item, Vec::new());
+            }
+            indexes.entry(item).and_modify(|x| {
+                if !x.contains(&temp) {
+                    x.push(temp)
+                }
+            });
         }
     }
-    return result;
+    indexes.shrink_to_fit();
+    return (result, indexes);
 });
 
 pub fn encode(text: String) -> String {
@@ -32,7 +46,7 @@ pub fn encode(text: String) -> String {
 }
 
 fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
-    let qzw = &*QZW;
+    let qzw = &*QZW.0;
     let mut tmp: String = BigInt::from_bytes_be(Sign::Plus, text.as_bytes()).to_string();
     tmp = "0".repeat((3 - tmp.len() % 3) % 3) + &tmp;
     return tmp
@@ -41,14 +55,28 @@ fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
         .chunks(3)
         .map(|chunk| {
             let index = chunk.iter().collect::<String>().parse::<usize>().unwrap();
-            qzw[index][rng.random_range(0..qzw[index].len())]
+            qzw[index][rng.random_range(..qzw[index].len())]
         })
         .collect();
 }
 
-pub fn decode(_text: String) {
-    let qzw = &*QZW;
-    dbg!(qzw);
+pub fn decode(text: String) -> impl Iterator<Item = String> {
+    let qzw = &QZW.1;
+    return text
+        .chars()
+        .filter_map(|x| qzw.get(&x).cloned())
+        .multi_cartesian_product()
+        .map(|item| {
+            std::str::from_utf8(
+                BigInt::parse_bytes(item.join("").as_bytes(), 10)
+                    .unwrap()
+                    .to_bytes_be()
+                    .1
+                    .as_slice(),
+            )
+            .unwrap()
+            .to_string()
+        });
 }
 
 #[cfg(test)]
@@ -65,7 +93,7 @@ mod tests {
 
     #[test]
     fn test_qzw_initialization() {
-        let qzw = &*QZW;
+        let qzw = &*QZW.0;
         assert!(!qzw.is_empty());
         assert_eq!(qzw.len(), 1000);
     }

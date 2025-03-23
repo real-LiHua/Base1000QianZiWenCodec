@@ -1,43 +1,38 @@
 # Base1000QianZiWenCodec
-
-## 简介
-Base1000QianZiWenCodec 是一个用于编码和解码文本的工具，主要应用于《千字文》的文本处理。该项目利用字符元组进行编码与解码，支持从文本文件加载字符数据。
+一个基于千字文的编码和解码工具。它将文本转换为千字文字符的组合，并支持从千字文字符组合还原原始文本。
 
 ## 功能
-• **文本编码**：将输入文本编码为特殊字符的字符串。  
-• **文本解码**：将编码后的字符串解码回原始文本。
 
-## 安装
-确保 Python 环境已安装，项目依赖标准库，无需额外安装。
+- **编码**: 将任意文本转换为千字文字符组合。
+- **解码**: 从千字文字符组合还原原始文本。
 
 ## 使用方法
 
-### 编码
-使用命令行参数 -e 进行文本编码：
+### 编译和运行
+
+1. 确保已安装 [Rust](https://www.rust-lang.org/) 工具链。
+2. 克隆项目并进入目录：
+   ```bash
+   git clone https://github.com/real-LiHua/Base1000QianZiWenCodec
+   cd Base1000QianZiWenCodec
+   ```
+3. 编译项目：
+   ```bash
+   cargo build -r
+   ```
+4. 运行程序：
+   ```bash
+   ./target/release/base1000 --help
+   ```
+
+### 命令行用法
+
+#### 编码文本
 ```bash
-python Base1000.py -e "待编码的文本"
+./target/release/base1000 --encode "Hello, world!"
 ```
 
-### 解码
-使用命令行参数 -d 进行文本解码：
+#### 解码文本
 ```bash
-python Base1000.py -d "编码后的字符串"
-```
-
-## 文件结构
-• 千字文/：包含用于编码解码的文本文件。  
-• 千字文/cache.json：缓存文件，存储字符元组。
-
-## 代码示例
-以下是如何使用编码和解码的示例：
-```python
-import Base1000
-
-# 编码示例
-encoded = Base1000.encode("元文本")
-print(encoded)
-
-# 解码示例
-decoded = list(Base1000.decode(encoded))
-print(decoded)
+./target/release/base1000 --decode "夜裳移柰梧"
 ```

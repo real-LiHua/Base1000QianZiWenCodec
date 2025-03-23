@@ -25,6 +25,9 @@ fn main() {
         let result: String = encode(args.text);
         println!("{}",result);
     } else {
-        decode(args.text);
+        for result in decode(args.text) {
+        println!("{}",result);
+
+        }
     }
 }
