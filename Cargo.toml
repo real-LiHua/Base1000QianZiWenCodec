@@ -9,12 +9,14 @@ keywords = ["base1000"]
 categories = ["command-line-utilities", "encoding"]
 include = ["/src/*.rs"]
 
-[features]
-
+[lib]
+name = "base1000"
+crate-type = ["cdylib"]
 
 [dependencies]
 clap = { version = "4.5.31", features = ["derive"] }
 itertools = "0.14.0"
 num-bigint = "0.4.6"
+pyo3 = "0.24.0"
 rand = "0.9.0"
 rust-embed = { version = "8.6.0", features = ["debug-embed", "include-exclude"] }

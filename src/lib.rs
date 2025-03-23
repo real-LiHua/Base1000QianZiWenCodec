@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use num_bigint::{BigInt, Sign};
+use pyo3::prelude::*;
 use rand::prelude::*;
 use rust_embed::Embed;
 use std::collections::HashMap;
@@ -77,6 +78,23 @@ pub fn decode(text: String) -> impl Iterator<Item = String> {
             .unwrap()
             .to_string()
         });
+}
+
+#[pyfunction(name = "encode")]
+fn py_encode(text: String) -> PyResult<String> {
+    Ok(encode(text))
+}
+
+#[pyfunction(name = "decode")]
+fn py_decode(text: String) -> PyResult<Vec<String>> {
+    Ok(decode(text).collect())
+}
+
+#[pymodule]
+fn base1000(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(py_encode, m)?)?;
+    m.add_function(wrap_pyfunction!(py_decode, m)?)?;
+    Ok(())
 }
 
 #[cfg(test)]
