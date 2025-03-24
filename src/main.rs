@@ -23,11 +23,10 @@ fn main() {
     let args = Cli::parse();
     if args.opt.encode {
         let result: String = encode(args.text);
-        println!("{}",result);
+        println!("{}", result);
     } else {
         for result in decode(args.text) {
-        println!("{}",result);
-
+            println!("{}", result);
         }
     }
 }
