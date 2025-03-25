@@ -24,3 +24,7 @@ rust-embed = { version = "8.6.0", features = ["debug-embed", "include-exclude"] 
 [features]
 encode = []
 decode = []
+
+[[bin]]
+name = "base1000"
+required-features = ["clap"]

@@ -30,12 +30,13 @@ struct Opt {
 fn main() {
     #[cfg(feature = "clap")]
     let args = Cli::parse();
-    #[cfg(feature = "clap")]
+    #[cfg(all(feature = "clap", feature = "encode"))]
     if args.opt.encode {
-        #[cfg(feature = "encode")]
         let result: String = encode(args.text);
         println!("{}", result);
-    } else {
+    }
+    #[cfg(all(feature = "clap", feature = "decode"))]
+    if arg.opt.decode {
         #[cfg(feature = "decode")]
         for result in decode(args.text) {
             println!("{}", result);
