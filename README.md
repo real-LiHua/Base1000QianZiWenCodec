@@ -17,6 +17,34 @@ Base1000 是一个基于《千字文》的文本编码器，支持将任意文�
 cargo build --release
 ```
 
+#### 启用特性
+
+- **`clap`**: 启用后支持命令行工具功能。可以通过以下命令启用：
+  ```bash
+  cargo build --release --features clap
+  ```
+
+- **`pyo3`**: 启用后支持构建 Python 扩展模块。可以通过以下命令启用：
+  ```bash
+  cargo build --release --features pyo3
+  ```
+
+- **`encode`**: 启用后支持文本编码功能。可以通过以下命令启用：
+  ```bash
+  cargo build --release --features encode
+  ```
+
+- **`decode`**: 启用后支持文本解码功能。可以通过以下命令启用：
+  ```bash
+  cargo build --release --features decode
+  ```
+
+- 同时启用多个特性：
+  ```bash
+  cargo build --release --features "clap pyo3 encode decode"
+  ```
+
+
 ### 使用 Maturin 构建 Python 扩展
 
 ```bash

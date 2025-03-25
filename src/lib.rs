@@ -1,21 +1,30 @@
-use itertools::Itertools;
+#[cfg(any(feature = "encode", feature = "decode"))]
 use num_bigint::{BigInt, Sign};
+#[cfg(feature = "pyo3")]
 use pyo3::prelude::{
     Bound, PyModule, PyModuleMethods, PyRef, PyRefMut, PyResult, pyclass, pyfunction, pymethods,
     pymodule, wrap_pyfunction,
 };
+#[cfg(feature = "encode")]
 use rand::prelude::Rng;
+#[cfg(any(feature = "encode", feature = "decode"))]
 use rust_embed::Embed;
+#[cfg(any(feature = "encode", feature = "decode"))]
 use std::collections::HashMap;
+#[cfg(any(feature = "encode", feature = "decode"))]
 use std::string::String;
+#[cfg(any(feature = "encode", feature = "decode"))]
 use std::sync::LazyLock;
+#[cfg(feature = "pyo3")]
 use std::sync::{Arc, Mutex};
 
+#[cfg(any(feature = "encode", feature = "decode"))]
 #[derive(Embed)]
 #[folder = "千字文"]
 #[include = "*.txt"]
 struct QianZiWenAssets;
 
+#[cfg(any(feature = "encode", feature = "decode"))]
 static QIAN_ZI_WEN: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = LazyLock::new(|| {
     let mut character_matrix = vec![Vec::new(); 1000];
     let mut character_indexes: HashMap<char, Vec<String>> = HashMap::new();
@@ -45,11 +54,13 @@ static QIAN_ZI_WEN: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = Laz
     return (character_matrix, character_indexes);
 });
 
+#[cfg(feature = "encode")]
 pub fn encode(text: String) -> String {
     let mut rng = rand::rng();
     return encode_with_rng(text, &mut rng);
 }
 
+#[cfg(feature = "encode")]
 fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
     if text.is_empty() {
         return text;
@@ -68,6 +79,7 @@ fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
         .collect();
 }
 
+#[cfg(feature = "decode")]
 pub fn decode(text: String) -> impl Iterator<Item = String> {
     let character_indexes = &QIAN_ZI_WEN.1;
     return text
@@ -80,16 +92,19 @@ pub fn decode(text: String) -> impl Iterator<Item = String> {
         });
 }
 
+#[cfg(all(feature = "pyo3", feature = "decode"))]
 #[pyfunction(name = "encode")]
 fn py_encode(text: String) -> PyResult<String> {
     Ok(encode(text))
 }
 
+#[cfg(all(feature = "pyo3", feature = "decode"))]
 #[pyclass]
 struct DecodeIterator {
     iter: Arc<Mutex<Box<dyn Iterator<Item = String> + Send>>>,
 }
 
+#[cfg(all(feature = "pyo3", feature = "decode"))]
 #[pymethods]
 impl DecodeIterator {
     fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
@@ -100,6 +115,7 @@ impl DecodeIterator {
     }
 }
 
+#[cfg(all(feature = "pyo3", feature = "decode"))]
 #[pyfunction(name = "decode")]
 fn py_decode(text: String) -> PyResult<DecodeIterator> {
     Ok(DecodeIterator {
@@ -107,9 +123,12 @@ fn py_decode(text: String) -> PyResult<DecodeIterator> {
     })
 }
 
+#[cfg(feature = "pyo3")]
 #[pymodule]
 fn base1000(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    #[cfg(feature = "encode")]
     m.add_function(wrap_pyfunction!(py_encode, m)?)?;
+    #[cfg(feature = "decode")]
     m.add_function(wrap_pyfunction!(py_decode, m)?)?;
     Ok(())
 }
@@ -117,8 +136,11 @@ fn base1000(m: &Bound<'_, PyModule>) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(feature = "encode")]
     use rand::prelude::*;
 
+    #[cfg(feature = "encode")]
     #[test]
     fn test_encode() {
         let text = String::from("Hello, world!");
@@ -127,6 +149,7 @@ mod tests {
         assert_ne!(encoded, text);
     }
 
+    #[cfg(any(feature = "encode", feature = "decode"))]
     #[test]
     fn test_qzw_initialization() {
         let qzw = &*QIAN_ZI_WEN.0;
@@ -134,6 +157,7 @@ mod tests {
         assert_eq!(qzw.len(), 1000);
     }
 
+    #[cfg(feature = "encode")]
     #[test]
     fn test_encode_deterministic() {
         let text = String::from("114514");
@@ -145,6 +169,7 @@ mod tests {
         assert_eq!(encoded1, "夜裳移柰梧");
     }
 
+    #[cfg(all(feature = "encode", feature = "decode"))]
     #[test]
     fn test_decode() {
         let text = String::from("Hello, world!");
@@ -152,6 +177,8 @@ mod tests {
         let decoded: Vec<String> = decode(encoded).collect();
         assert!(decoded.contains(&text));
     }
+
+    #[cfg(all(feature = "encode", feature = "decode"))]
     #[test]
     fn test_empty_input() {
         let text = String::from("");
@@ -160,6 +187,8 @@ mod tests {
         let decoded: Vec<String> = decode(encoded).collect();
         assert!(decoded.contains(&text));
     }
+
+    #[cfg(feature = "decode")]
     #[test]
     fn test_invalid_character_in_decode() {
         let invalid_text = String::from("InvalidCharacters");
