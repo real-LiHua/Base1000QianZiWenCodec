@@ -1,5 +1,9 @@
+#[cfg(feature = "decode")]
+use itertools::Itertools;
+
 #[cfg(any(feature = "encode", feature = "decode"))]
 use num_bigint::{BigInt, Sign};
+
 #[cfg(feature = "pyo3")]
 use pyo3::prelude::{
     Bound, PyModule, PyModuleMethods, PyRef, PyRefMut, PyResult, pyclass, pyfunction, pymethods,

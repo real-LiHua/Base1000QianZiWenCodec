@@ -34,10 +34,10 @@ fn main() {
     if args.opt.encode {
         let result: String = encode(args.text);
         println!("{}", result);
+        return;
     }
     #[cfg(all(feature = "clap", feature = "decode"))]
-    if arg.opt.decode {
-        #[cfg(feature = "decode")]
+    if args.opt.decode {
         for result in decode(args.text) {
             println!("{}", result);
         }

@@ -12,6 +12,7 @@ Base1000 是一个基于《千字文》的文本编码器，支持将任意文�
 ## 安装
 
 ### 使用 Cargo 构建
+默认启用特性（clap、encode、decode）
 
 ```bash
 cargo build --release
