@@ -1,4 +1,6 @@
 from typing import Iterator
 
+__all__: list[str]
+
 def encode(text:str) -> str: ...
 def decode(text: str) -> Iterator[str]: ...
