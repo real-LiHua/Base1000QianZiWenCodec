@@ -67,16 +67,9 @@ pub fn decode(text: String) -> impl Iterator<Item = String> {
         .chars()
         .filter_map(|x| qzw.get(&x).cloned())
         .multi_cartesian_product()
-        .map(|item| {
-            std::str::from_utf8(
-                BigInt::parse_bytes(item.join("").as_bytes(), 10)
-                    .unwrap()
-                    .to_bytes_be()
-                    .1
-                    .as_slice(),
-            )
-            .unwrap()
-            .to_string()
+        .filter_map(|item| {
+            BigInt::parse_bytes(item.join("").as_bytes(), 10)
+                .and_then(|bigint| String::from_utf8(bigint.to_bytes_be().1).ok())
         });
 }
 
@@ -87,13 +80,14 @@ fn py_encode(text: String) -> PyResult<String> {
 
 #[pyfunction(name = "decode")]
 fn py_decode(text: String) -> PyResult<Vec<String>> {
-    Ok(decode(text).collect())
+    Ok(decode(text).collect::<Vec<String>>())
 }
 
 #[pymodule]
 fn base1000(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(py_encode, m)?)?;
     m.add_function(wrap_pyfunction!(py_decode, m)?)?;
+    //    m.add_class::<py_decode<_>>()?;
     Ok(())
 }
 

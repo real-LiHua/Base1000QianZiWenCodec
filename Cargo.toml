@@ -11,7 +11,7 @@ include = ["/src/*.rs"]
 
 [lib]
 name = "base1000"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 clap = { version = "4.5.31", features = ["derive"] }
@@ -20,3 +20,7 @@ num-bigint = "0.4.6"
 pyo3 = "0.24.0"
 rand = "0.9.0"
 rust-embed = { version = "8.6.0", features = ["debug-embed", "include-exclude"] }
+
+[features]
+extension-module = ["pyo3/extension-module"]
+default = ["extension-module"]
