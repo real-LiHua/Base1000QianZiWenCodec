@@ -1,11 +1,10 @@
-#[cfg(all(feature = "clap", feature = "decode"))]
+#[cfg(feature = "decode")]
 use base1000::decode;
-#[cfg(all(feature = "clap", feature = "encode"))]
+#[cfg(feature = "encode")]
 use base1000::encode;
-#[cfg(feature = "clap")]
+
 use clap::{Args, Parser};
 
-#[cfg(feature = "clap")]
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
@@ -14,7 +13,6 @@ struct Cli {
     text: String,
 }
 
-#[cfg(feature = "clap")]
 #[derive(Args)]
 #[group(required = true, multiple = false)]
 struct Opt {
@@ -28,15 +26,14 @@ struct Opt {
 }
 
 fn main() {
-    #[cfg(feature = "clap")]
     let args = Cli::parse();
-    #[cfg(all(feature = "clap", feature = "encode"))]
+    #[cfg(feature = "encode")]
     if args.opt.encode {
         let result: String = encode(args.text);
         println!("{}", result);
         return;
     }
-    #[cfg(all(feature = "clap", feature = "decode"))]
+    #[cfg(feature = "decode")]
     if args.opt.decode {
         for result in decode(args.text) {
             println!("{}", result);

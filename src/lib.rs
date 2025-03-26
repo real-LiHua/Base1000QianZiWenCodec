@@ -1,25 +1,34 @@
+use cfg_if::cfg_if;
+cfg_if! {
+    if #[cfg(any(feature = "encode", feature = "decode"))] {
+        use num_bigint::BigInt;
+        use rust_embed::Embed;
+        use std::collections::HashMap;
+        use std::string::String;
+        use std::sync::LazyLock;
+    }
+}
+
+cfg_if! {
+    if #[cfg(feature = "encode")] {
+        use num_bigint::Sign;
+        use rand::prelude::Rng;
+    }
+}
+
 #[cfg(feature = "decode")]
 use itertools::Itertools;
 
-#[cfg(any(feature = "encode", feature = "decode"))]
-use num_bigint::{BigInt, Sign};
+#[cfg(feature = "pyo3")]
+use pyo3::prelude::{Bound, PyModule, PyResult, pymodule};
 
-#[cfg(feature = "pyo3")]
-use pyo3::prelude::{
-    Bound, PyModule, PyModuleMethods, PyRef, PyRefMut, PyResult, pyclass, pyfunction, pymethods,
-    pymodule, wrap_pyfunction,
-};
-#[cfg(feature = "encode")]
-use rand::prelude::Rng;
-#[cfg(any(feature = "encode", feature = "decode"))]
-use rust_embed::Embed;
-#[cfg(any(feature = "encode", feature = "decode"))]
-use std::collections::HashMap;
-#[cfg(any(feature = "encode", feature = "decode"))]
-use std::string::String;
-#[cfg(any(feature = "encode", feature = "decode"))]
-use std::sync::LazyLock;
-#[cfg(feature = "pyo3")]
+#[cfg(all(feature = "pyo3", any(feature = "encode", feature = "decode")))]
+use pyo3::prelude::{PyModuleMethods, wrap_pyfunction};
+
+#[cfg(all(feature = "pyo3", feature = "decode"))]
+use pyo3::prelude::{PyRef, PyRefMut, pyclass, pyfunction, pymethods};
+
+#[cfg(all(feature = "pyo3", feature = "decode"))]
 use std::sync::{Arc, Mutex};
 
 #[cfg(any(feature = "encode", feature = "decode"))]
@@ -30,9 +39,16 @@ struct QianZiWenAssets;
 
 #[cfg(any(feature = "encode", feature = "decode"))]
 static QIAN_ZI_WEN: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = LazyLock::new(|| {
+    #[cfg(feature = "encode")]
     let mut character_matrix = vec![Vec::new(); 1000];
+    #[cfg(not(feature = "encode"))]
+    let character_matrix = vec![Vec::new(); 1000];
+
+    #[cfg(feature = "decode")]
     let mut character_indexes: HashMap<char, Vec<String>> = HashMap::new();
-    let mut temp_index: String;
+    #[cfg(not(feature = "decode"))]
+    let character_indexes: HashMap<char, Vec<String>> = HashMap::new();
+
     for file in QianZiWenAssets::iter() {
         for (index, character) in std::str::from_utf8(&QianZiWenAssets::get(&file).unwrap().data)
             .unwrap()
@@ -40,21 +56,29 @@ static QIAN_ZI_WEN: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = Laz
             .filter(|c| !c.is_whitespace())
             .enumerate()
         {
+            #[cfg(feature = "encode")]
             if !character_matrix[index].contains(&character) {
                 character_matrix[index].push(character);
             }
-            temp_index = format!("{:03}", index);
+
+            #[cfg(feature = "decode")]
             if !character_indexes.contains_key(&character) {
                 character_indexes.insert(character, Vec::new());
             }
+
+            #[cfg(feature = "decode")]
             character_indexes.entry(character).and_modify(|x| {
+                let temp_index = format!("{:03}", index);
                 if !x.contains(&temp_index) {
                     x.push(temp_index)
                 }
             });
         }
     }
+
+    #[cfg(feature = "decode")]
     character_indexes.shrink_to_fit();
+
     return (character_matrix, character_indexes);
 });
 
@@ -96,35 +120,35 @@ pub fn decode(text: String) -> impl Iterator<Item = String> {
         });
 }
 
-#[cfg(all(feature = "pyo3", feature = "decode"))]
-#[pyfunction(name = "encode")]
+#[cfg(all(feature = "pyo3", feature = "encode"))]
 fn py_encode(text: String) -> PyResult<String> {
     Ok(encode(text))
 }
 
-#[cfg(all(feature = "pyo3", feature = "decode"))]
-#[pyclass]
-struct DecodeIterator {
-    iter: Arc<Mutex<Box<dyn Iterator<Item = String> + Send>>>,
-}
+cfg_if! {
+    if #[cfg(all(feature = "pyo3", feature = "decode"))] {
+        #[pyclass]
+        struct DecodeIterator {
+            iter: Arc<Mutex<Box<dyn Iterator<Item = String> + Send>>>,
+        }
 
-#[cfg(all(feature = "pyo3", feature = "decode"))]
-#[pymethods]
-impl DecodeIterator {
-    fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
-        slf
-    }
-    fn __next__(slf: PyRefMut<'_, Self>) -> Option<String> {
-        slf.iter.lock().unwrap().next()
-    }
-}
+        #[pymethods]
+        impl DecodeIterator {
+            fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
+                slf
+            }
+            fn __next__(slf: PyRefMut<'_, Self>) -> Option<String> {
+                slf.iter.lock().unwrap().next()
+            }
+        }
 
-#[cfg(all(feature = "pyo3", feature = "decode"))]
-#[pyfunction(name = "decode")]
-fn py_decode(text: String) -> PyResult<DecodeIterator> {
-    Ok(DecodeIterator {
-        iter: Arc::new(Mutex::new(Box::new(decode(text)))),
-    })
+        #[pyfunction(name = "decode")]
+        fn py_decode(text: String) -> PyResult<DecodeIterator> {
+            Ok(DecodeIterator {
+                iter: Arc::new(Mutex::new(Box::new(decode(text)))),
+            })
+        }
+    }
 }
 
 #[cfg(feature = "pyo3")]
