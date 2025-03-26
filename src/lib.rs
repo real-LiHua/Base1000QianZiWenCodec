@@ -3,6 +3,11 @@
 //! Base1000 is a text encoder based on the "Thousand Character Classic",
 //! supporting encoding any text into a sequence of "Thousand Character Classic" characters
 //! and decoding it back to the original text.
+//!
+//! ## Features
+//! - `encode`: Enables text encoding functionality.
+//! - `decode`: Enables text decoding functionality.
+//! - `pyo3`: Enables Python bindings for encoding and decoding.
 use cfg_if::cfg_if;
 cfg_if! {
     if #[cfg(any(feature = "encode", feature = "decode"))] {
@@ -95,6 +100,9 @@ static QIAN_ZI_WEN: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = Laz
 /// # Returns
 /// A string representing the encoded text.
 ///
+/// # Features
+/// This function requires the `encode` feature to be enabled.
+///
 /// # Examples
 /// ```
 /// use base1000::encode;
@@ -103,6 +111,18 @@ static QIAN_ZI_WEN: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = Laz
 ///     let encoded = encode("114514".to_string());
 ///     println!("{}", encoded);
 /// }
+/// ```
+///
+/// # Python Bindings
+/// This function is exposed to Python as `base1000.encode`.
+/// Requires the `pyo3` feature to be enabled for Python bindings.
+///
+/// # Python Example
+/// ```python
+/// import base1000
+///
+/// encoded = base1000.encode("114514")
+/// print(encoded)
 /// ```
 #[cfg(feature = "encode")]
 pub fn encode(text: String) -> String {
@@ -137,6 +157,9 @@ fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
 /// # Returns
 /// An iterator over possible decoded strings.
 ///
+/// # Features
+/// This function requires the `decode` feature to be enabled.
+///
 /// # Examples
 /// ```
 /// use base1000::decode;
@@ -146,6 +169,18 @@ fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
 ///         println!("{}", decoded);
 ///     }
 /// }
+/// ```
+///
+/// # Python Bindings
+/// This function is exposed to Python as `base1000.decode`.
+/// Requires the `pyo3` feature to be enabled for Python bindings.
+///
+/// # Python Example
+/// ```python
+/// import base1000
+///
+/// for decoded in base1000.decode("夜裳移柰梧"):
+///     print(decoded)
 /// ```
 #[cfg(feature = "decode")]
 pub fn decode(text: String) -> impl Iterator<Item = String> {
