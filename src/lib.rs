@@ -1,3 +1,8 @@
+//! # Base1000 Thousand Character Classic Encoder
+//!
+//! Base1000 is a text encoder based on the "Thousand Character Classic",
+//! supporting encoding any text into a sequence of "Thousand Character Classic" characters
+//! and decoding it back to the original text.
 use cfg_if::cfg_if;
 cfg_if! {
     if #[cfg(any(feature = "encode", feature = "decode"))] {
@@ -82,6 +87,23 @@ static QIAN_ZI_WEN: LazyLock<(Vec<Vec<char>>, HashMap<char, Vec<String>>)> = Laz
     return (character_matrix, character_indexes);
 });
 
+/// Encodes the given text into a string using the "Thousand Character Classic" character matrix.
+///
+/// # Arguments
+/// * `text` - The input text to encode.
+///
+/// # Returns
+/// A string representing the encoded text.
+///
+/// # Examples
+/// ```
+/// use base1000::encode;
+///
+/// fn main() {
+///     let encoded = encode("114514".to_string());
+///     println!("{}", encoded);
+/// }
+/// ```
 #[cfg(feature = "encode")]
 pub fn encode(text: String) -> String {
     let mut rng = rand::rng();
@@ -107,6 +129,24 @@ fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
         .collect();
 }
 
+/// Decodes the given text into an iterator of possible original strings.
+///
+/// # Arguments
+/// * `text` - The encoded text to decode.
+///
+/// # Returns
+/// An iterator over possible decoded strings.
+///
+/// # Examples
+/// ```
+/// use base1000::decode;
+///
+/// fn main() {
+///     for decoded in decode("夜裳移柰梧".to_string()) {
+///         println!("{}", decoded);
+///     }
+/// }
+/// ```
 #[cfg(feature = "decode")]
 pub fn decode(text: String) -> impl Iterator<Item = String> {
     let character_indexes = &QIAN_ZI_WEN.1;
