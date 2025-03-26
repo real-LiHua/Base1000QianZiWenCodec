@@ -1,6 +1,6 @@
 [package]
 name = "base1000"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Li Hua <lihua@email.com>"]
 edition = "2024"
 description = 'A a text encoder based on the "Thousand Character Classic"'
