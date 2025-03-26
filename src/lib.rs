@@ -121,6 +121,7 @@ pub fn decode(text: String) -> impl Iterator<Item = String> {
 }
 
 #[cfg(all(feature = "pyo3", feature = "encode"))]
+#[pyfunction(name = "encode")]
 fn py_encode(text: String) -> PyResult<String> {
     Ok(encode(text))
 }
