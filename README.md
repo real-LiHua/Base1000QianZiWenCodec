@@ -85,8 +85,8 @@ encoded = base1000.encode("114514")
 print(encoded)
 
 # Decoding
-decoded = base1000.decode(encoded)
-print(decoded)
+for decoded in base1000.decode(encoded):
+    print(decoded)
 ```
 
 ## Testing
