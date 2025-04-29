@@ -2,6 +2,9 @@
 
 Base1000 is a text encoder based on the "Thousand Character Classic", supporting encoding any text into a sequence of "Thousand Character Classic" characters and decoding it back to the original text.
 
+[![Static Badge](https://img.shields.io/badge/DeepWiki-blue)](https://deepwiki.com/real-LiHua/Base1000QianZiWenCodec)
+
+
 ## Features
 
 - **Encoding**: Encode input text into a sequence of "Thousand Character Classic" characters.
