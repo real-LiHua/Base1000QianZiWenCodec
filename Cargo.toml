@@ -33,3 +33,7 @@ default = ["clap", "encode", "decode"]
 [[bin]]
 name = "base1000"
 required-features = ["clap"]
+
+[profile.release]
+lto = true
+strip = "symbols"
