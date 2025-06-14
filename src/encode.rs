@@ -48,7 +48,7 @@ fn encode_with_rng(text: String, rng: &mut impl Rng) -> String {
     }
     let character_matrix = &*QIAN_ZI_WEN.0;
     let mut bigint_string: String = BigInt::from_bytes_be(Sign::Plus, text.as_bytes()).to_string();
-    bigint_string = "0".repeat((3 - bigint_string.len() % 3) % 3) + &bigint_string;
+    bigint_string = "0".repeat(3 - bigint_string.len() % 3) + &bigint_string;
     return bigint_string
         .chars()
         .collect::<Vec<char>>()
