@@ -1,5 +1,4 @@
-#import pytest
-from base1000 import base1000
+from base1000 import encode
 
 def test_encode():
-    assert base1000.encode("114514") == "夜裳移柰梧"
+    assert encode("114514") == "夜裳移柰梧"

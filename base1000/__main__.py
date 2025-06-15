@@ -1,3 +1,3 @@
-from base1000 import main
+from base1000 import _main
 
-main()
+_main()
