@@ -4,14 +4,15 @@ build-backend = "maturin"
 
 [project]
 name = "base1000"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dynamic = ["version"]
-scripts.base1000 = "base1000:main"
+scripts.base1000 = "base1000:_main"
+optional-dependencies.mcp = [ "mcp[cli]>=1.9.4" ]
 
 [tool.maturin]
 features = ["pyo3/extension-module"]

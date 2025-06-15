@@ -98,7 +98,7 @@ pip install .
 #### Example
 
 ```python
-from base1000 import base1000
+import base1000
 
 # Encoding
 encoded = base1000.encode("114514")

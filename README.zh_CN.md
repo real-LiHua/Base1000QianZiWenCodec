@@ -95,7 +95,7 @@ pip install .
 #### 示例
 
 ```python
-from base1000 import base1000
+import base1000
 
 # 编码
 encoded = base1000.encode("114514")
