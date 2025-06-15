@@ -70,6 +70,23 @@ base1000 -e "114514"
 base1000 -d "夜裳移柰梧"
 ```
 
+### UVX Direct Execution
+
+You can directly execute the tool using [uvx](https://docs.astral.sh/uv/getting-started/installation/):
+
+```bash
+uvx git+https://github.com/real-LiHua/Base1000QianZiWenCodec [switch] text
+```
+
+### pipx Direct Execution
+
+You can directly execute the tool using [pipx](https://pipx.pypa.io/stable/installation/):
+
+```bash
+pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base1000 [switch] text
+```
+
+
 ### Python Extension
 
 #### Installation
@@ -104,5 +121,7 @@ cargo test
 
 - `src/lib.rs`: Core library implementation.
 - `src/main.rs`: Command-line tool entry point.
-- `base1000/__main__.py`: Python CLI implementation.
+- `base1000/__init__.py`: Python CLI implementation.
 - `base1000/base1000.pyi`: Python type hint file.
+
+

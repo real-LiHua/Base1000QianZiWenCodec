@@ -11,7 +11,7 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dynamic = ["version"]
-scripts.base1000 = "base1000:__main__"
+scripts.base1000 = "base1000:main"
 
 [tool.maturin]
 features = ["pyo3/extension-module"]

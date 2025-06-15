@@ -68,6 +68,22 @@ base1000 -e "114514"
 base1000 -d "夜裳移柰梧"
 ```
 
+### UVX 直接执行
+
+你可以直接使用 [uvx](https://docs.astral.sh/uv/getting-started/installation/) 执行该工具：
+
+```bash
+uvx git+https://github.com/real-LiHua/Base1000QianZiWenCodec [switch] text
+```
+
+### pipx 直接执行
+
+你可以直接使用 [pipx](https://pipx.pypa.io/stable/installation/) 执行该工具：
+
+```bash
+pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base1000 [switch] text
+```
+
 ### Python 扩展
 
 #### 安装
@@ -102,5 +118,7 @@ cargo test
 
 - `src/lib.rs`: 核心库实现。
 - `src/main.rs`: 命令行工具入口。
-- `base1000/__main__.py`: Python CLI 实现。
+- `base1000/__init__.py`: Python CLI 实现。
 - `base1000/base1000.pyi`: Python 类型提示文件。
+
+
