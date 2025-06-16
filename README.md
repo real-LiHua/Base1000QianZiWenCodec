@@ -86,6 +86,20 @@ You can directly execute the tool using [pipx](https://pipx.pypa.io/stable/insta
 pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base1000 [switch] text
 ```
 
+### Model Context Protocol (MCP)
+```json
+{
+    "mcpServers": {
+        "github.com/real-LiHua/Base1000QianZiWenCodec": {
+            "command": "uvx",
+            "args": [
+                "git+https://github.com/real-LiHua/Base1000QianZiWenCodec[mcp]"
+            ],
+        }
+    }
+}
+```
+
 
 ### Python Extension
 

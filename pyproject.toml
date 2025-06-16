@@ -19,5 +19,5 @@ features = ["pyo3/extension-module"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q"
+addopts = "-v"
 testpaths = ["tests"]

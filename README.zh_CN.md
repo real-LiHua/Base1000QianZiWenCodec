@@ -84,6 +84,20 @@ uvx git+https://github.com/real-LiHua/Base1000QianZiWenCodec [switch] text
 pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base1000 [switch] text
 ```
 
+### 模型上下文协议 (MCP)
+```json
+{
+    "mcpServers": {
+        "github.com/real-LiHua/Base1000QianZiWenCodec": {
+            "command": "uvx",
+            "args": [
+                "git+https://github.com/real-LiHua/Base1000QianZiWenCodec[mcp]"
+            ],
+        }
+    }
+}
+```
+
 ### Python 扩展
 
 #### 安装
