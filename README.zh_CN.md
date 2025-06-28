@@ -85,6 +85,9 @@ pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base100
 ```
 
 ### 模型上下文协议 (MCP)
+
+#### 使用 Claude 进行配置
+
 ```json
 {
     "mcpServers": {
@@ -95,6 +98,25 @@ pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base100
             ],
         }
     }
+}
+```
+
+#### 使用 Zed 进行配置
+
+```json
+{
+  "context_servers": {
+    "github.com/real-LiHua/Base1000QianZiWenCodec": {
+      "source": "custom",
+      "command": {
+        "path": "uvx",
+        "args": [
+          "git+https://github.com/real-LiHua/Base1000QianZiWenCodec[mcp]"
+        ],
+        "env": null
+      }
+    }
+  }
 }
 ```
 

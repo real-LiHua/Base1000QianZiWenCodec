@@ -87,6 +87,9 @@ pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base100
 ```
 
 ### Model Context Protocol (MCP)
+
+#### Configuring with Claude
+
 ```json
 {
     "mcpServers": {
@@ -100,6 +103,24 @@ pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base100
 }
 ```
 
+#### Configuring with Zed
+
+```json
+{
+  "context_servers": {
+    "github.com/real-LiHua/Base1000QianZiWenCodec": {
+      "source": "custom",
+      "command": {
+        "path": "uvx",
+        "args": [
+          "git+https://github.com/real-LiHua/Base1000QianZiWenCodec[mcp]"
+        ],
+        "env": null
+      }
+    }
+  }
+}
+```
 
 ### Python Extension
 
