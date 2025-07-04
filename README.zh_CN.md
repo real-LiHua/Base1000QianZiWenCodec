@@ -125,13 +125,13 @@ pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base100
 #### 安装
 
 ```bash
-pip install .
+pip install "git+https://github.com/real-LiHua/Base1000QianZiWenCodec"
 ```
 
 #### 示例
 
 ```python
-import base1000
+from base1000 import base1000
 
 # 编码
 encoded = base1000.encode("114514")
@@ -154,7 +154,11 @@ cargo test
 
 - `src/lib.rs`: 核心库实现。
 - `src/main.rs`: 命令行工具入口。
-- `base1000/__init__.py`: Python CLI 实现。
+- `src/encode.rs`: 编码功能实现。
+- `src/decode.rs`: 解码功能实现。
+- `base1000/__init__.py`: Python 包初始化文件。
+- `base1000/__main__.py`: Python 命令行工具入口。
+- `base1000/_run.py`: Python 命令行工具运行脚本。
 - `base1000/base1000.pyi`: Python 类型提示文件。
 
 

@@ -32,7 +32,7 @@ use std::string::String;
 ///
 /// # Python Example
 /// ```python
-/// import base1000
+/// from base1000 import base1000
 ///
 /// for decoded in base1000.decode("夜裳移柰梧"):
 ///     print(decoded)

@@ -127,13 +127,13 @@ pipx run --spec git+https://github.com/real-LiHua/Base1000QianZiWenCodec base100
 #### Installation
 
 ```bash
-pip install .
+pip install "git+https://github.com/real-LiHua/Base1000QianZiWenCodec"
 ```
 
 #### Example
 
 ```python
-import base1000
+from base1000 import base1000
 
 # Encoding
 encoded = base1000.encode("114514")
@@ -156,7 +156,11 @@ cargo test
 
 - `src/lib.rs`: Core library implementation.
 - `src/main.rs`: Command-line tool entry point.
-- `base1000/__init__.py`: Python CLI implementation.
+- `src/encode.rs`: Encoding implementation.
+- `src/decode.rs`: Decoding implementation.
+- `base1000/__init__.py`: Python package initialization.
+- `base1000/__main__.py`: Python CLI entry point.
+- `base1000/_run.py`: Python CLI implementation.
 - `base1000/base1000.pyi`: Python type hint file.
 
 

@@ -1,4 +1,4 @@
-from base1000 import decode
+from base1000 import base1000
 
 def test_decode():
-    assert "114514" in decode("夜裳移柰梧")
+    assert "114514" in base1000.decode("夜裳移柰梧")

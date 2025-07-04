@@ -32,7 +32,7 @@ use std::string::String;
 ///
 /// # Python Example
 /// ```python
-/// import base1000
+/// from base1000 import base1000
 ///
 /// encoded = base1000.encode("114514")
 /// print(encoded)

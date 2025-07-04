@@ -1,2 +1,2 @@
-from base1000 import _main
-_main()
+from base1000 import _run
+_run.cli()
