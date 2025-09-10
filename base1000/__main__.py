@@ -1,2 +1,4 @@
-from base1000 import _run
-_run.cli()
+#!usr/bin/env python3
+from ._run import cli
+
+cli()

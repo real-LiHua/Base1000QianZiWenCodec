@@ -93,6 +93,7 @@ pub use crate::encode::encode;
 
 #[cfg(all(feature = "pyo3", feature = "encode"))]
 #[pyfunction(name = "encode")]
+#[pyo3(signature = (text: "str") -> "str")]
 fn py_encode(text: String) -> PyResult<String> {
     Ok(encode(text))
 }
@@ -115,6 +116,7 @@ cfg_if! {
         }
 
         #[pyfunction(name = "decode")]
+        #[pyo3(signature = (text: "str") -> "list[str]")]
         fn py_decode(text: String) -> PyResult<DecodeIterator> {
             Ok(DecodeIterator {
                 iter: Arc::new(Mutex::new(Box::new(decode(text)))),
