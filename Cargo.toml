@@ -18,7 +18,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 cfg-if = "1.0.1"
-clap = { version = "4.5.40", features = ["derive"], optional = true }
+clap = { version = "4.5.47", features = ["derive"], optional = true }
 itertools = "0.14.0"
 num-bigint = "0.4.6"
 pyo3 = { version="0.26.0", features = ["experimental-inspect"], optional = true }
