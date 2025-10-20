@@ -23,7 +23,7 @@ itertools = "0.14.0"
 num-bigint = "0.4.6"
 pyo3 = { version="0.26.0", features = ["experimental-inspect"], optional = true }
 rand = "0.9.2"
-rust-embed = { version = "8.6.0", features = ["debug-embed", "include-exclude"] }
+rust-embed = { version = "8.8.0", features = ["debug-embed", "include-exclude"] }
 
 [features]
 encode = []
