@@ -1,12 +1,9 @@
 version: 2
-multi-ecosystem-groups:
-  infrastructure:
-    schedule:
-      interval: "weekly"
 updates:
   - package-ecosystem: "cargo"
     directory: "/"
-    multi-ecosystem-group: "infrastructure"
+    schedule:
+      interval: "weekly"
     groups:
       production-dependencies:
         dependency-type: "production"
@@ -14,7 +11,8 @@ updates:
         dependency-type: "development"
   - package-ecosystem: "uv"
     directory: "/"
-    multi-ecosystem-group: "infrastructure"
+    schedule:
+      interval: "weekly"
     groups:
       production-dependencies:
         dependency-type: "production"
